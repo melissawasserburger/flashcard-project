@@ -14,9 +14,9 @@ import AddCard from "./AddCard";
 import NotFound from "../NotFound";
 import EditCard from "./EditCard";
 
-// this component
+// this component loads the selected deck and provides Switch/Routes for functionalities
 // path = "/decks/:deckId"
-export default function ViewDeck({ deleteHandler }) {
+export default function ViewDeck({ deleteHandler, decks, setDecks }) {
   const { deckId } = useParams();
   const { url } = useRouteMatch();
 
@@ -33,7 +33,7 @@ export default function ViewDeck({ deleteHandler }) {
 
   useEffect(() => {
     getDeckDetails();
-  }, [deckId, getDeckDetails]);
+  }, [deckId, getDeckDetails, deck.cards]);
 
   async function deleteCardHandler(cardId) {
     if (
@@ -46,7 +46,7 @@ export default function ViewDeck({ deleteHandler }) {
 
   const cardlist = deck.cards.map((card, index) => {
     return (
-      <ViewCard key={index} card={card} deleteHandler={deleteCardHandler} deckId={deck.id}/>
+      <ViewCard key={index} card={card} deleteHandler={deleteCardHandler} deckId={deck.id} />
     );
   });
 
@@ -106,14 +106,15 @@ export default function ViewDeck({ deleteHandler }) {
 
           <h2 className="col col-12">Cards</h2>
 
-          <div>{cardlist}</div>
+          <div className="col col-12 my-2">{cardlist}</div>
         </div>
+        
       </Route>
       <Route path={`${url}/edit`}>
-        <EditDeck deckId={deck.id} />
+        <EditDeck deckId={deck.id} decks={decks} setDecks={setDecks}/>
       </Route>
       <Route path={`${url}/cards/new`}>
-        <AddCard deckId={deck.id} />
+        <AddCard decks={decks} setDecks={setDecks} deckId={deck.id} />
       </Route>
       <Route path={`/decks/:deckId/cards/:cardId/edit`}>
         <EditCard />

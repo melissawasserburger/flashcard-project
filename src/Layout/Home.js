@@ -46,11 +46,7 @@ export default function Home() {
           <Link to="/decks/new" className="btn btn-secondary">
             <Icon icon="oi:plus" /> Create Deck
           </Link>
-          <Decklist
-            decks={decks}
-            setDecks={setDecks}
-            deleteHandler={deleteDeckHandler}
-          />
+          <Decklist decks={decks} deleteHandler={deleteDeckHandler} />
         </Route>
         <Route exact path="/decks/new">
           <CreateDeck decks={decks} setDecks={setDecks} />
@@ -59,10 +55,14 @@ export default function Home() {
           <Study />
         </Route>
         <Route path="/decks/:deckId">
-          <ViewDeck deleteHandler={deleteDeckHandler} />
+          <ViewDeck
+            deleteHandler={deleteDeckHandler}
+            decks={decks}
+            setDecks={setDecks}
+          />
         </Route>
         <Route>
-            <NotFound />
+          <NotFound />
         </Route>
       </Switch>
     </div>

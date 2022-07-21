@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react";
 // this component contains the HTML for each card, displayed on ViewDeck
 export default function ViewCard({ card, deleteHandler, deckId }) {
   return (
-    <div className="row">
+    <div className="row my-2">
       <div className="col col-12">
         <div className="card">
           <div className="d-flex flex-row">

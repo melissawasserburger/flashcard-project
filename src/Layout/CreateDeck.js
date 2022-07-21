@@ -37,6 +37,7 @@ export default function CreateDeck({ decks, setDecks }) {
     async function callCreateDeck() {
       try {
         const deckData = await createDeck(formData, abortController.signal);
+        setDecks([...decks, formData]);
         history.push(`/decks/${deckData.id}`); 
       } catch (error) {
         if (error.name !== "AbortError") {

@@ -3,7 +3,8 @@ import { Link, useHistory } from "react-router-dom";
 import { updateDeck, readDeck } from "../../utils/api";
 import { Icon } from "@iconify/react";
 
-export default function EditDeck({deckId}) {
+// this component is responsible for editing existing decks
+export default function EditDeck({deckId, decks, setDecks}) {
 
     const [deck, setDeck] = useState({ cards: []});
 
@@ -43,13 +44,27 @@ export default function EditDeck({deckId}) {
         setFormData({...formData, [target.name]: target.value});
     };
 
+    // const selectedDeck = decks.find((deck)=> deck.id === deckId);
+    // const index = decks.indexOf(selectedDeck);
+    // console.log(index);
+    // console.log(decks[index]);
+    // for (let deck of decks) {
+      //   if (deckId === deck.id) {
+      //     deck = formData
+      //   }
+      // }
+    
+
     function submitHandler(event) {
         event.preventDefault();
         const abortController = new AbortController();
 
+
         async function editDeck() {
             try {
                 const deckData = await updateDeck(formData, abortController.signal);
+                setDeck(deckData);
+                
                 history.push(`/decks/${deckData.id}`);
             } catch (error) {
                 if (error.name === "AbortError") {
