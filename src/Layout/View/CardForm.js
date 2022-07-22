@@ -37,16 +37,15 @@ export default function CardForm({ deck, cardId, setDeck }) {
 
       const submitHandler = (event) => {
         event.preventDefault();
-       // const newCardsArr = deck.cards.push(formData);
 
         if(existingCard.id) {
             updateCard(formData);
             history.push(`/decks/${deck.id}`);
         } else {
             createCard(deck.id, formData);
+            setDeck({...deck, cards: [...deck.cards, formData]});
         }
 
-      //  setDeck({...deck, cards: newCardsArr});
         setFormData(initialFormState);
       }
 

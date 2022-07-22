@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { updateDeck, readDeck } from "../../utils/api";
 import { Icon } from "@iconify/react";
 
 // this component is responsible for editing existing decks
-export default function EditDeck({deckId, decks, setDecks}) {
+// path = /decks/:deckId/edit
+export default function EditDeck() {
 
+    const { deckId } = useParams();
     const [deck, setDeck] = useState({ cards: []});
 
     useEffect(()=> {
@@ -29,7 +31,7 @@ export default function EditDeck({deckId, decks, setDecks}) {
 
     const history = useHistory();
 
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({name: "", description: "", id: ""});
 
     useEffect(()=> {
         const initialFormState = {
@@ -43,16 +45,6 @@ export default function EditDeck({deckId, decks, setDecks}) {
     const changeHandler = ({target}) => {
         setFormData({...formData, [target.name]: target.value});
     };
-
-    // const selectedDeck = decks.find((deck)=> deck.id === deckId);
-    // const index = decks.indexOf(selectedDeck);
-    // console.log(index);
-    // console.log(decks[index]);
-    // for (let deck of decks) {
-      //   if (deckId === deck.id) {
-      //     deck = formData
-      //   }
-      // }
     
 
     function submitHandler(event) {

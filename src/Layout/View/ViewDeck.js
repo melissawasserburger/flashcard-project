@@ -16,24 +16,32 @@ import EditCard from "./EditCard";
 
 // this component loads the selected deck and provides Switch/Routes for functionalities
 // path = "/decks/:deckId"
-export default function ViewDeck({ deleteHandler, decks, setDecks }) {
+export default function ViewDeck({ deleteHandler }) {
   const { deckId } = useParams();
   const { url } = useRouteMatch();
 
   const [deck, setDeck] = useState({ cards: [] });
 
+  // loads the deck
   const getDeckDetails = useCallback(async () => {
+    const abortController = new AbortController();
     try {
-      const deckData = await readDeck(deckId);
+      const deckData = await readDeck(deckId, abortController.signal);
       setDeck(deckData);
     } catch (error) {
       setDeck({ name: "Not Found" });
     }
+
+    return () => abortController.abort();
   }, [deckId]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     getDeckDetails();
-  }, [deckId, getDeckDetails, deck.cards]);
+
+    return () => abortController.abort();
+  }, [deckId, getDeckDetails]);
 
   async function deleteCardHandler(cardId) {
     if (
@@ -46,7 +54,12 @@ export default function ViewDeck({ deleteHandler, decks, setDecks }) {
 
   const cardlist = deck.cards.map((card, index) => {
     return (
-      <ViewCard key={index} card={card} deleteHandler={deleteCardHandler} deckId={deck.id} />
+      <ViewCard
+        key={index}
+        card={card}
+        deleteHandler={deleteCardHandler}
+        deckId={deck.id}
+      />
     );
   });
 
@@ -108,13 +121,12 @@ export default function ViewDeck({ deleteHandler, decks, setDecks }) {
 
           <div className="col col-12 my-2">{cardlist}</div>
         </div>
-        
       </Route>
-      <Route path={`${url}/edit`}>
-        <EditDeck deckId={deck.id} decks={decks} setDecks={setDecks}/>
+      <Route path={`/decks/:deckId/edit`}>
+        <EditDeck />
       </Route>
       <Route path={`${url}/cards/new`}>
-        <AddCard decks={decks} setDecks={setDecks} deckId={deck.id} />
+        <AddCard deckId={deck.id} />
       </Route>
       <Route path={`/decks/:deckId/cards/:cardId/edit`}>
         <EditCard />
